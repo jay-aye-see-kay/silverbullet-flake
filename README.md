@@ -10,7 +10,12 @@ Running silverbullet requires an existing directory to initialise in.
 
 ```bash
 mkdir space
-nix run .# -- ./space
+
+# print help
+nix run .# -- --help
+
+# run server (allowing remote connections)
+nix run .# -- --hostname 0.0.0.0 ./space
 ```
 
 # Updating the silverbullet.js file

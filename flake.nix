@@ -10,12 +10,12 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        silverbullet =
-          pkgs.writeShellScriptBin "silverbullet"
-            "${pkgs.deno}/bin/deno run -A --unstable ${./silverbullet.js} --hostname 0.0.0.0 $@";
-        updateBin =
-          pkgs.writeShellScriptBin "updateBin"
-            "${pkgs.curl}/bin/curl https://get.silverbullet.md > silverbullet.js";
+
+        updateBin = pkgs.writeShellScriptBin "updateBin"
+          "${pkgs.curl}/bin/curl https://get.silverbullet.md > silverbullet.js";
+
+        silverbullet = pkgs.writeShellScriptBin "silverbullet"
+          "${pkgs.deno}/bin/deno run -A --unstable ${./silverbullet.js} $@";
       in
       rec {
         apps.updateBin = { type = "app"; program = "${updateBin}/bin/updateBin"; };
