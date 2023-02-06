@@ -47,4 +47,17 @@ git commit -a
 
 # Running silverbullet as a systemd service
 
-TODO
+```nix
+{
+  systemd.services.silverbullet = {
+    enable = true;
+    unitConfig = {
+      Type = "simple";
+    };
+    serviceConfig = {
+      ExecStart = "${pkgs.silverbullet}/bin/silverbullet --port 2001 /srv/notes";
+    };
+    wantedBy = [ "multi-user.target" ];
+  };
+}
+```
