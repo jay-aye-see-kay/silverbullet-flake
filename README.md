@@ -1,3 +1,43 @@
+# Archived because no longer needed
+
+I've since realised that silverbullet publishes the compiled `js` file as a github release. This means I have a permanent url to fetch known versions from and that's much tidier that using this flake. I've left the repo up for myself as reference.
+
+Here is what I've used in place of this flake:
+
+```nix
+{
+  systemd.services.silverbullet =
+    let
+      version = "0.2.11";
+      silverbullet-js-file = pkgs.fetchurl {
+        url = "https://github.com/silverbulletmd/silverbullet/releases/download/${version}/silverbullet.js";
+        sha256 = "sha256-h0lASLNxJ5DZvaJbHpMI2PtRWCty1vPro1n8R5vHQME=";
+      };
+      silverbullet = pkgs.writeShellScriptBin "silverbullet"
+        "${pkgs.deno}/bin/deno run -A --unstable ${silverbullet-js-file} $@";
+    in
+    {
+      enable = true;
+      description = "silverbullet.md serving my notes on port 2001";
+      unitConfig = {
+        Type = "simple";
+      };
+      serviceConfig = {
+        ExecStart = "${silverbullet}/bin/silverbullet --port 2001 /home/jack/notes";
+        User = "jack";
+        Group = "users";
+      };
+      wantedBy = [ "multi-user.target" ];
+    };
+}
+```
+
+---
+
+Original readme below
+
+---
+
 # What/why
 
 I couldn't figure out how to run silverbullet on nix (I tried with [this project's help](https://github.com/SnO2WMaN/deno2nix/) but silverbullet doesn't ship a lockfile, and when I forked it to add a lockfile, it didn't seem to be stable).
